@@ -48,5 +48,5 @@ Disconnect the Thermal Printer from the power supply. Press and hold the paper f
 - Get a printer for yourself: https://www.adafruit.com/product/597
   - Soldering the printer: https://learn.adafruit.com/pi-thermal-printer/soldering-pre-2017
   - General information on pin setup: https://learn.adafruit.com/mini-thermal-receipt-printer/circuitpython - **Long story short: Ground goes to Ground pin on Raspberry Pi, Yellow goes to Pin 14**.
-- https://cdn-shop.adafruit.com/datasheets/cashino+thermal+printer+a2.pdf
-- https://cdn-shop.adafruit.com/datasheets/A2-user+manual.pdf
+- Data sheet: https://cdn-shop.adafruit.com/datasheets/cashino+thermal+printer+a2.pdf
+- In-depth manual (with control codes for serial access) https://cdn-shop.adafruit.com/datasheets/A2-user+manual.pdf
