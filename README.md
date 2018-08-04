@@ -39,6 +39,15 @@ dependencies {
 
 This library is still very new, and has not reached a stable state yet. Expect changes in the API from snapshot to snapshot. To bind yourself to a specific commit, check out the _Commits_ tab on [JitPack](https://jitpack.io/#SebastianAigner/Thermal-Kotlin/).
 
+### Quick Start
+
+1. **Set up** the printer using `val printer = ThermalPrinter("/dev/serial0", 19200)`, adjusting communication port and Baud rate if necessary.
+2. **Connect** to the printer using `printer.connect()`.
+3. **Write text** using `printer.writeLine()` for a _single line_ and `printer.writeText` if you need _automatic line-breaking_.
+4. **Adjust text** by changing the `doubleWidth`, `justification`, `inverted`, `bold` properties. Don't forget to change them back when you're done!
+5. **Print images** calling `writeImage()` with a `BufferedImage` of your choice. It is automatically scaled and dithered.
+6. **Close the connection** using `printer.disconnect()`.
+
 ### How to determine Baud rate
 
 Disconnect the Thermal Printer from the power supply. Press and hold the paper feed button, and plug in the power. The printer will output a Character Code Table as well as its Baudrate and other useful information that might be interesting for debugging.
