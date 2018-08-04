@@ -15,12 +15,18 @@ fun main(args: Array<String>) {
     val printer = ThermalPrinter("/dev/serial0", 19200)
     printer.apply {
         connect()
-        writeLine("Hello! This is the Demo of")
-        underlineOn()
-        writeLine("ThermalKt!")
-        underlineOff()
+        doubleWidth = true
+        justification = ThermalPrinter.Justification.CENTER
+        underlined = true
+        writeLine("Thermal-Kotlin")
+        doubleWidth = false
+        writeLine("Printing straight from Kotlin.")
+        underlined = false
+        justification = ThermalPrinter.Justification.LEFT
+        writeText("Kotlin Driver for A2 Micro Panel Thermal Printer. Provides an easy to use API to print text and images to the 2.25\" printer model.")
         writeLine("")
         writeImage(ImageIO.read(URL("https://i.imgur.com/TfanVF2.jpg")))
+        writeLine("github.com/Sebastian-Aigner/Thermal-Kotlin")
         disconnect()
     }
 }
@@ -59,6 +65,53 @@ class ThermalPrinter(commPort: String, baudRate: Int) {
         port.closePort()
     }
 
+    private var _doubleWidth = false
+    var doubleWidth get() = _doubleWidth
+        set(value) {
+            writeMultiBytes(ESCAPE, if(value) 14 else 20)
+            _bold = value
+        }
+
+    private var _bold = false
+    var bold get() = _bold
+        set(value) {
+            writeMultiBytes(ESCAPE, 'E'.toByte(), if(value) 1 else 0)
+            _bold = value
+        }
+
+    private var _underlined = false
+    var underlined get() = _underlined
+        set(value) {
+            writeMultiBytes(ESCAPE, '-'.toByte(), if(value) 2 else 0)
+            _underlined = value
+        }
+
+    private var _inverted = false
+    var inverted: Boolean
+        get() = _inverted
+        set(value) {
+            writeMultiBytes(29, 66, if (value) 1 else 0)
+            _inverted = value
+        }
+
+    enum class Justification {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
+
+    private var _justification = Justification.LEFT
+    var justification get() = _justification
+    set(value) {
+        _justification = value
+        val indent = when(value) {
+            Justification.LEFT -> 0
+            Justification.CENTER -> 1
+            Justification.RIGHT -> 2
+        }
+        writeMultiBytes(ESCAPE, 'a'.toByte(), indent.toByte())
+    }
+
     /**
      * Writes a text string to the printer (without applying line-breaking).
      * Automatically terminates the string with a newline if none is present (as the printer will not print a
@@ -72,18 +125,35 @@ class ThermalPrinter(commPort: String, baudRate: Int) {
     }
 
     /**
-     * Turns on underlines.
+     * Print text with line breaks. Uses a simple algorithm that's most likely not perfect, but gets the job done.
      */
-    fun underlineOn() {
-        //ESCAPE, '-', 2 <- weight
-        writeMultiBytes(ESCAPE, '-'.toByte(), 2)
-    }
-
-    /**
-     * Turns off underlines
-     */
-    fun underlineOff() {
-        writeMultiBytes(ESCAPE, '-'.toByte(), 0)
+    fun writeText(str: String) {
+        val lineWidth = 31
+        val sb = StringBuilder()
+        val words = str.split(" ")
+        var remaining = lineWidth
+        for(w in words) {
+            if(w.length > lineWidth) {
+                sb.append("\n")
+                sb.append(w)
+                sb.append("\n")
+                remaining = lineWidth
+                continue
+            }
+            if(w.length <= remaining) {
+                sb.append(w)
+                sb.append(" ")
+            }
+            else {
+                remaining = lineWidth
+                sb.setLength(sb.length - 1) //gets rid of excessive space
+                sb.append("\n")
+                sb.append(w)
+                sb.append(" ")
+            }
+            remaining -= w.length+1
+        }
+        writeLine(sb.toString())
     }
 
     /**

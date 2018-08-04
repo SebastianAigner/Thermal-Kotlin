@@ -7,13 +7,13 @@ Kotlin Driver for A2 Micro Panel Thermal Printer. Provides an easy to use API to
 
 - [x] Print text strings
 - [x] Underline text
-- [ ] Bold Text
-- [ ] Inverse Text
-- [ ] Automatic Line Breaks for Text
-- [ ] Kotlin DSL for composing rich text strings
+- [x] Bold Text
+- [x] Inverse Text
+- [x] Automatic Line Breaks for Text
 - [x] Print 1-bit images
 - [x] Resize and dither colored images (using [Floyd-Steinberg dithering](https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering))
 - [x] Throttled data transfer to allow for large images
+- [ ] Rich text string DSL
 - [ ] Print barcodes
 
 ### Usage with Gradle
