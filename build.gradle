@@ -1,0 +1,38 @@
+buildscript {
+    ext.kotlin_version = '1.2.60'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+group 'io.sebi'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+mainClassName = "MainKt"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    //compile group: 'com.pi4j', name: 'pi4jcore', version: '1.1'
+    compile 'com.fazecast:jSerialComm:2.0.2'
+}
+
+run {
+    standardInput = System.in
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
